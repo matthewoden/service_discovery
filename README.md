@@ -10,11 +10,11 @@ _(Turns out, there aren't examples because it's crazy-simple)_
 
 In addition, I threw in a module that allows for a hosts file to be built as part of build (say, for an auto-scaling group in AWS), and automatically connect to any existing cluster. 
 
-_(again, this is really just a wrapper around an existing feature.)_
+_(...again, this is really just a wrapper around an existing feature.)_
 
 ## Usage
 
-* 'ServiceDiscovery.Network` finds and connects to existing elixir/erlang servers on startup.
+* `ServiceDiscovery.Network` finds and connects to existing elixir/erlang servers on startup.
 * `ServiceDiscovery.Tracker` registers the service to the cluster upon arrival, allowing it to immediately be used by other servers.
 
 
