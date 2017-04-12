@@ -14,17 +14,14 @@ _(...again, this is really just a wrapper around an existing feature.)_
 
 ## Usage
 
+Examples usage project to come shortly. Docs available with `mix docs`.
+
 * `ServiceDiscovery.Network` finds and connects to existing elixir/erlang servers on startup.
 * `ServiceDiscovery.Tracker` registers the service to the cluster upon arrival, allowing it to immediately be used by other servers.
 
+**Note:** this project does assumes you have a `.host.erlang` dotfile on your local machine.
 
-Examples usage project to come shortly. Docs available with `mix docs`.
-
-**Note:** this project does assume you have a `.host.erlang` dotfile on your local machine.
-
-## Giving it a spin
-
-Assuming `~/.host.erlang` is on your machine with the following contents:
+If you don't, go ahead and touch `~/.host.erlang` on your machine, and stuff it with the following contents:
 
 ``` erlang
 'node1@127.0.0.1'.
