@@ -1,27 +1,42 @@
 # ServiceDiscovery
 
-A very light wrapper around Phoenix.Pubsub, to create an eventually consistent service discovery application, and load balancing. 
+Scripts and experiments around dynamic/decentralized Service Discovery, and self-healing clusters.
+
+## Contents:
+
+**Modules**
+* Tracker - Light wrapper around phoenix pubsub. 
+* Network - Uses hostfile to automatically connects to node on the local machine, local subnet, or any resolved name
+
+Tracker - Using Phoenix.PubSub, services are tracked and announced upon connection. Service tracking is fully decentralized, so no one node's health dictates the health of the cluster. Load balancing is handled by calling services, rather than a single load balancer.
+
+Discovery - Run on startup (or after netsplit), allows the current module to rediscover the cluster.
+
+_TODO: add quick script to Network module to handle renaming of current node in case of update to dynamically assigned address._
+
+**Scripts: LAN Disovery**
+* ipfinder - A quick and dirty example of dynamic hostfile generation for a local subnet. Assumes the user can't rely on a hostname alias, or setting static ip addresses.
 
 
 ## Background
-I rewatched Chris McCord's 2016 Elixir talk about how creating Phoenix Presence also solved service discovery, but I didn't see any examples out there of how exactly that would work. So I wrote my own.
+Chris McCord gave two talks in 2016, each mentioning how Presence (Phoenix.PubSub) also solved service discovery. I didn't know how Presence worked at the time, so I implemented the examples he mentioned. From there I just started jotting down experiments in network management.
 
-_(Turns out, there aren't examples because it's crazy-simple)_
-
-In addition, I threw in a module that allows for a hosts file to be built as part of build (say, for an auto-scaling group in AWS), and automatically connect to any existing cluster. 
-
-_(...again, this is really just a wrapper around an existing feature.)_
 
 ## Usage
 
-Examples usage project to come shortly. Docs available with `mix docs`.
+The usage example below is for "distributed" use on a single machine. Multiple-machine example to come.
 
-* `ServiceDiscovery.Network` finds and connects to existing elixir/erlang servers on startup.
+
+* 'ServiceDiscovery.Network` finds and connects to existing elixir/erlang servers on startup.
 * `ServiceDiscovery.Tracker` registers the service to the cluster upon arrival, allowing it to immediately be used by other servers.
 
-**Note:** this project does assumes you have a `.host.erlang` dotfile on your local machine.
 
-If you don't, go ahead and touch `~/.host.erlang` on your machine, and stuff it with the following contents:
+Examples usage project to come shortly. Docs available with `mix docs`.
+
+
+## Giving it a spin
+
+Assuming `~/.host.erlang` is on your machine with the following contents:
 
 ``` erlang
 'node1@127.0.0.1'.
@@ -48,4 +63,7 @@ Then, on each iex instance, you can throw the following:
 iex> ServiceDiscovery.Tracker.track(self(), "test", %{})
 ```
 
-and watch the magic happen. At this point, you can start start connecting and disconnecting, updating and tracking. Data will replicate over the nodes. Active updates like Tracker.join and Tracker.update register pretty much immediately, but netsplits and node disconnections take a few seconds to kick in. 
+At this point, you should start experimenting. Connect and disconnect nodes. Send tracker updates. Notice how the PubSub's CRDT model keeps announcements in sync, but not sudden disconnects. Those stick around, until the heartbeat.
+
+Notice also that when a new node joins the cluster, it handles the cleanup of bad PIDs. This also shows how netsplits get handled - when services leave and arrive, even momentarily, they clean themselves up.
+
