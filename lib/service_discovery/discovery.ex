@@ -33,7 +33,7 @@ defmodule ServiceDiscovery.Network do
       hosts when is_list(hosts) ->
         Logger.info("Attempting to join cluster")
 
-        :net_adm.host_file()
+        hosts
         |> Stream.filter(fn host -> host != node() end)
         |> Stream.map(&connect(&1))
         |> Enum.filter(&(&1))
