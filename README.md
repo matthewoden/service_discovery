@@ -27,7 +27,7 @@ Chris McCord gave two talks in 2016, each mentioning how Presence (Phoenix.PubSu
 The usage example below is for "distributed" use on a single machine. Multiple-machine example to come.
 
 
-* 'ServiceDiscovery.Network` finds and connects to existing elixir/erlang servers on startup.
+* `ServiceDiscovery.Network` finds and connects to existing elixir/erlang servers on startup.
 * `ServiceDiscovery.Tracker` registers the service to the cluster upon arrival, allowing it to immediately be used by other servers.
 
 
